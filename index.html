@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Nada — A Little Love Page</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ff6b81;
+      --muted:#9aa7bf;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      background: radial-gradient( circle at 10% 10%, #071428 0%, var(--bg) 40%), linear-gradient(180deg,#071428 0%, #081225 100%);
+      color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    }
+
+    .card{
+      width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.6);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.03);
+      display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:center;
+    }
+
+    .left{padding-right:6px}
+    h1{margin:0 0 8px 0;font-size:28px;letter-spacing:-0.02em}
+    p.lead{margin:0 0 18px 0;color:var(--muted)}
+
+    .typewriter{font-size:20px;line-height:1.4;min-height:64px}
+    .heart-wrap{display:flex;gap:12px;align-items:center}
+
+    .heart{
+      width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+      background:linear-gradient(135deg,#ff9aa2,#ff6b81);box-shadow:0 8px 30px rgba(255,107,129,0.18), inset 0 -6px 20px rgba(255,255,255,0.06);
+      transform:scale(1);transition:transform 160ms ease;position:relative;
+    }
+    .heart:active{transform:scale(.96)}
+    .heart svg{filter:drop-shadow(0 6px 18px rgba(255,107,129,0.22))}
+
+    /* beating */
+    .heart.beat{animation:beat 0.9s infinite}
+    @keyframes beat{0%{transform:scale(1)}30%{transform:scale(1.14)}60%{transform:scale(1)}100%{transform:scale(1)}}
+
+    .controls{display:flex;flex-direction:column;gap:12px}
+    label{font-size:13px;color:var(--muted)}
+    input[type=text], textarea{width:100%;padding:10px 12px;background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;color:inherit;font-size:14px}
+    textarea{min-height:90px;resize:vertical}
+
+    .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+    .btn-pink{background:linear-gradient(90deg,#ff7b92,#ff4b70);color:white}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    .right{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .card-note{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));padding:12px;border-radius:10px}
+
+    .sent-card{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
+
+    .small{font-size:12px;color:var(--muted)}
+
+    /* confetti particles */
+    .confetti{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+    .confetti i{position:absolute;width:10px;height:18px;opacity:0;transform-origin:center;will-change:transform,opacity}
+
+    footer{grid-column:1/-1;margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media (max-width:880px){.card{grid-template-columns:1fr;}.right{order:2}}
+
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-label="Love page for Nada">
+    <div class="left">
+      <div class="heart-wrap">
+        <div class="heart" id="heart" title="Click pour envoyer ton amour">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <path d="M12 21s-7.5-4.35-9-6.5C1.5 11.5 4 7 8 6c2-0.5 4 0 4 0s2-0.5 4 0c4 1 6.5 5.5 5 8.5-1.5 2.15-9 6.5-9 6.5z" fill="#fff" opacity="0.95"/>
+          </svg>
+        </div>
+        <div>
+          <h1>For Nada — A Small Interactive Love Note</h1>
+          <p class="lead">Clique sur le cœur, écris un petit mot, et rends-le spécial avec des effets jolis ✨</p>
+        </div>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="typewriter" id="typewriter">Écris quelque chose de doux pour Nada…</div>
+      </div>
+
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="btn btn-pink" id="quickCompliment">Compliment rapide</button>
+        <button class="btn btn-ghost" id="toggleBeat">Activer battement</button>
+      </div>
+
+    </div>
+
+    <aside class="right">
+      <div class="card-note">
+        <label for="toName">Destinataire</label>
+        <input id="toName" type="text" placeholder="Nada" value="Nada">
+
+        <label style="margin-top:10px" for="message">Ton message</label>
+        <textarea id="message" placeholder="Écris un message sincère...">Tu es incroyable et tu rends mes journées meilleures ❤</textarea>
+
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-pink" id="sendBtn">Envoyer à Nada</button>
+          <button class="btn btn-ghost" id="previewBtn">Aperçu</button>
+        </div>
+
+        <div class="sent-card" id="preview" style="display:none">
+          <strong id="previewTitle">Pour Nada</strong>
+          <p id="previewText" style="margin:8px 0 0 0;white-space:pre-wrap"></p>
+        </div>
+
+        <p class="small">Astuce : utilise <strong>Compliment rapide</strong> pour t'inspirer, puis personnalise le message.</p>
+      </div>
+    </aside>
+
+    <div class="confetti" id="confetti"></div>
+
+    <footer>Made with a little code and a lot of heart ❤️</footer>
+  </div>
+
+  <script>
+    // Simple interactions
+    const heart = document.getElementById('heart');
+    const typebox = document.getElementById('typewriter');
+    const quick = document.getElementById('quickCompliment');
+    const toggleBeat = document.getElementById('toggleBeat');
+    const sendBtn = document.getElementById('sendBtn');
+    const previewBtn = document.getElementById('previewBtn');
+    const preview = document.getElementById('preview');
+    const previewText = document.getElementById('previewText');
+    const previewTitle = document.getElementById('previewTitle');
+    const toName = document.getElementById('toName');
+    const message = document.getElementById('message');
+    const confettiRoot = document.getElementById('confetti');
+
+    // Compliments list
+    const compliments = [
+      "Ton sourire illumine mes journées.",
+      "Avec toi, la vie est plus douce.",
+      "Tu as un cœur d'or.",
+      "Ta présence me rend meilleur.",
+      "Chaque moment passé avec toi compte."
+    ];
+
+    // Typewriter effect
+    function typeWriter(text, el, speed=30){
+      el.textContent = '';
+      let i=0;
+      const t = setInterval(()=>{
+        el.textContent += text.charAt(i);
+        i++;
+        if(i>text.length-1) clearInterval(t);
+      }, speed);
+    }
+
+    quick.addEventListener('click', ()=>{
+      const c = compliments[Math.floor(Math.random()*compliments.length)];
+      message.value = c + ' ' + message.value;
+      typeWriter(c, typebox, 18);
+      pulseHeart();
+    });
+
+    toggleBeat.addEventListener('click', ()=>{
+      heart.classList.toggle('beat');
+      toggleBeat.textContent = heart.classList.contains('beat') ? 'Désactiver battement' : 'Activer battement';
+    });
+
+    // Heart click triggers send preview + confetti
+    heart.addEventListener('click', ()=>{
+      pulseHeart();
+      showPreview(true);
+      launchConfetti();
+    });
+
+    sendBtn.addEventListener('click', ()=>{
+      // simulate send
+      pulseHeart();
+      showPreview(true);
+      launchConfetti();
+      saveNoteLocally();
+    });
+
+    previewBtn.addEventListener('click', ()=>showPreview());
+
+    function showPreview(force){
+      const txt = message.value.trim();
+      const name = toName.value.trim() || 'Nada';
+      if(!txt && !force){
+        preview.style.display='none';
+        return;
+      }
+      previewTitle.textContent = `Pour ${name}`;
+      previewText.textContent = txt || '(Aucun message)';
+      preview.style.display='block';
+      typeWriter((txt || 'Écris quelque chose...'), typebox, 14);
+    }
+
+    // small pulse animation for heart
+    function pulseHeart(){
+      heart.classList.remove('beat');
+      void heart.offsetWidth;
+      heart.classList.add('beat');
+      setTimeout(()=>{ if(!toggleBeat.classList.contains('active')) heart.classList.remove('beat') }, 1200);
+    }
+
+    // save simple note to localStorage as history
+    function saveNoteLocally(){
+      const history = JSON.parse(localStorage.getItem('loveHistory')||'[]');
+      history.unshift({to:toName.value, text:message.value, date:new Date().toISOString()});
+      localStorage.setItem('loveHistory', JSON.stringify(history.slice(0,20)));
+    }
+
+    // lightweight confetti (no libs)
+    function launchConfetti(){
+      const count = 28;
+      const colors = ['#ff6b81','#ffd36b','#7bf6c2','#7bdcff','#c78bff'];
+      for(let i=0;i<count;i++){
+        const el = document.createElement('i');
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.left = Math.random()*100+'%';
+        el.style.top = '-10%';
+        el.style.opacity = '1';
+        el.style.transform = `rotate(${Math.random()*360}deg)`;
+        confettiRoot.appendChild(el);
+
+        // animate
+        const dur = 1800 + Math.random()*1000;
+        el.animate([
+          {transform: `translateY(0) rotate(${Math.random()*360}deg)`, opacity:1},
+          {transform: `translateY(${100+Math.random()*60}vh) rotate(${Math.random()*720}deg)`, opacity:0}
+        ],{duration:dur,easing:'cubic-bezier(.2,.6,.2,1)'}).onfinish = ()=>el.remove();
+      }
+    }
+
+    // initialize small welcoming text
+    document.addEventListener('DOMContentLoaded', ()=>{
+      typeWriter('Tape un message sincère pour Nada, puis envoie-le avec le cœur ❤️', typebox, 14);
+    });
+
+  </script>
+</body>
+</html>
